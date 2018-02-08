@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * Creates the db tables for hardwoods_help.
+ */
+function hardwoods_schema() {
+  return [
+    'hardwoods_help' => [
+      'description' => 'Stores fields for each node',
+      'fields' => [
+        'nid' => [
+          'type' => 'int',
+          'size' => 'big',
+          'not null' => TRUE,
+        ],
+        'fields' => [
+          'description' => 'JSON list of fields in the form of {"0": {"title": "", "content": {"value": "", "format": ""}}}',
+          'type' => 'text',
+          'not null' => FALSE,
+          'default' => '[]',
+        ],
+      ],
+      'unique keys' => [
+        'nid' => [
+          'nid',
+        ],
+      ],
+    ],
+  ];
+}
