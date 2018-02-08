@@ -3,28 +3,35 @@
 /**
  * Creates the db tables for hardwoods_help.
  */
-function hardwoods_schema() {
+function hardwoods_help_schema() {
   return [
     'hardwoods_help' => [
       'description' => 'Stores fields for each node',
       'fields' => [
-        'nid' => [
-          'type' => 'int',
-          'size' => 'big',
-          'not null' => TRUE,
-        ],
-        'fields' => [
-          'description' => 'JSON list of fields in the form of {"0": {"title": "", "content": {"value": "", "format": ""}}}',
-          'type' => 'text',
-          'not null' => FALSE,
-          'default' => '[]',
-        ],
+        'id' => ['type' => 'serial', 'not null' => TRUE],
+        'nid' => ['type' => 'int', 'size' => 'big', 'not null' => TRUE],
+        'title' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+        'content' => ['type' => 'text', 'not null' => FALSE],
+        'weight' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
       ],
-      'unique keys' => [
+      'primary key' => ['id'],
+      'indexes' => [
         'nid' => [
-          'nid',
-        ],
-      ],
+          'nid'
+        ]
+      ]
     ],
   ];
+}
+
+/**
+ * Uninstall schema and delete content
+ */
+function hardwoods_help_uninstall() {
+  if (db_table_exists('hardwoods_help')) {
+    db_drop_table('hardwoods_help');
+  }
+
+  // Delete all help page content
+  db_query('DELETE FROM {node} WHERE type = :type', [':type' => 'help']);
 }
