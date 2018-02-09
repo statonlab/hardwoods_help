@@ -2,3 +2,5 @@ name = Hardwoods Help
 description = Provides tabbed help page content type
 core = 7.x
 version = 7.x-1.0
+
+scripts[] = theme/js/hardwoods_help.js
