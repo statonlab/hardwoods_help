@@ -13,6 +13,7 @@ function hardwoods_help_form($node, &$form_state) {
   $fields = [];
   if ($node && isset($node->nid)) {
     $fields = hardwoods_help_get_fields($node->nid);
+    $form_state['tab_count'] = count($fields);
   }
 
   if (empty($form_state['tab_count'])) {
@@ -54,14 +55,14 @@ function hardwoods_help_form($node, &$form_state) {
     $form['tabs']["fieldset_$i"]["tab_content__$i"] = [
       '#type' => 'text_format',
       '#title' => t('Tab Content'),
-      '#format' => isset($fields[$i]) ? $fields[$i]->content->format : '',
+      '#format' => isset($fields[$i]) ? $fields[$i]->content->format : 'full_html',
       '#default_value' => isset($fields[$i]) ? $fields[$i]->content->value : '',
     ];
 
     $form['tabs']["fieldset_$i"]["tab_weight__$i"] = [
       '#type' => 'select',
       '#title' => t('Tab Weight'),
-      '#options' => drupal_map_assoc(range(-50, 50, 1)),
+      '#options' => drupal_map_assoc(range(-10, 10)),
       '#default_value' => isset($fields[$i]) ? $fields[$i]->weight : 0,
       '#suffix' => t('<p style="color: #777">To remove a tab, delete the the title and the content then submit the form.</p>'),
     ];
@@ -113,15 +114,7 @@ function hardwoods_help_ajax_callback($form, &$form_state) {
  * @throws \Exception
  */
 function hardwoods_help_node_insert($node) {
-  $query = db_delete('hardwoods_help');
-  $query->condition('nid', $node->nid);
-  $query->execute();
-
-  for ($i = 0; $i < $node->count; $i++) {
-    if (!isset($node->{"tab_title__$i"})) {
-      continue;
-    }
-
+  for ($i = 0; isset($node->{"tab_title__$i"}); $i++) {
     db_insert('hardwoods_help')->fields([
       'nid' => $node->nid,
       'title' => $node->{"tab_title__$i"},
@@ -129,4 +122,19 @@ function hardwoods_help_node_insert($node) {
       'weight' => $node->{"tab_weight__$i"},
     ])->execute();
   }
+}
+
+/**
+ * Update a node.
+ *
+ * @param $node
+ *
+ * @throws \Exception
+ */
+function hardwoods_help_node_update($node) {
+  db_query('DELETE FROM {hardwoods_help} WHERE nid=:nid', [
+    ':nid' => $node->nid,
+  ]);
+
+  hardwoods_help_node_insert($node);
 }

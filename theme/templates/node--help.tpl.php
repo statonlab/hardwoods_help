@@ -1,19 +1,21 @@
 <div class="row">
     <div class="col-lg-auto">
-      <?php
-      $i = 0;
-      foreach ($fields as $field):
-        $i++;
-        ?>
-          <ul class="nav flex-column">
+        <ul class="nav flex-column" role="tablist">
+          <?php
+          $i = 0;
+          foreach ($fields as $field):
+            $i++;
+            ?>
               <li class="nav-item">
                   <a class="nav-link<?php print $i == 1 ? ' active' : ''; ?>"
-                     href="javascript:void(0);">
-                    <?php print $field->title . " $i"; ?>
+                     data-toggle="tab"
+                     role="tab"
+                     href="<?php print "#help-tabs--tab_{$field->id}" ?>">
+                    <?php print $field->title ?>
                   </a>
               </li>
-          </ul>
-      <?php endforeach; ?>
+          <?php endforeach; ?>
+        </ul>
     </div>
     <div class="col-lg">
         <div class="tab-content">
@@ -22,7 +24,12 @@
           foreach ($fields as $field):
             $i++;
             ?>
-              <div class="tab-pane fade<?php print $i === 1 ? ' show active' : ''; ?>">
+              <div class="help-tab-pane tab-pane fade<?php print $i === 1 ? ' show active' : ''; ?>"
+                   role="tabpanel"
+                   id="<?php print "help-tabs--tab_{$field->id}" ?>">
+                  <div class="tab-pane-title">
+                      <h3 class="font-weight-light mb-3"><?php print "{$field->title}" ?></h3>
+                  </div>
                 <?php print check_markup($field->content->value, $field->content->format) ?>
               </div>
           <?php endforeach; ?>
