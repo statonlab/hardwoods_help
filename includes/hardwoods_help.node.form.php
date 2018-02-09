@@ -115,6 +115,10 @@ function hardwoods_help_ajax_callback($form, &$form_state) {
  */
 function hardwoods_help_node_insert($node) {
   for ($i = 0; isset($node->{"tab_title__$i"}); $i++) {
+    if (empty($node->{"tab_title__$i"}) || empty($node->{"tab_content__$i"})) {
+      continue;
+    }
+
     db_insert('hardwoods_help')->fields([
       'nid' => $node->nid,
       'title' => $node->{"tab_title__$i"},
