@@ -13,7 +13,10 @@ function hardwoods_help_form($node, &$form_state) {
   $fields = [];
   if ($node && isset($node->nid)) {
     $fields = hardwoods_help_get_fields($node->nid);
-    $form_state['tab_count'] = count($fields);
+
+    if (!isset($form_state['tab_count'])) {
+      $form_state['tab_count'] = count($fields);
+    }
   }
 
   if (empty($form_state['tab_count'])) {
@@ -87,7 +90,7 @@ function hardwoods_help_form($node, &$form_state) {
  * @param array $form
  * @param array $form_state
  *
- * @return mixed
+ * @return void
  */
 function hardwoods_help_ajax_add_one($form, &$form_state) {
   $form_state['tab_count']++;
@@ -115,7 +118,7 @@ function hardwoods_help_ajax_callback($form, &$form_state) {
  */
 function hardwoods_help_node_insert($node) {
   for ($i = 0; isset($node->{"tab_title__$i"}); $i++) {
-    if (empty($node->{"tab_title__$i"}) || empty($node->{"tab_content__$i"})) {
+    if (empty(trim($node->{"tab_title__$i"})) || empty($node->{"tab_content__$i"}['value'])) {
       continue;
     }
 
