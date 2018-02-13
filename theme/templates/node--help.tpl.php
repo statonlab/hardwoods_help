@@ -28,7 +28,7 @@
                    role="tabpanel"
                    id="<?php print "help-tabs--tab_{$field->id}" ?>">
                   <div class="tab-pane-title">
-                      <h3 class="font-weight-light mb-3"><?php print "{$field->title}" ?></h3>
+                      <h2 class="font-weight-light mb-3"><?php print "{$field->title}" ?></h2>
                   </div>
                 <?php print check_markup($field->content->value, $field->content->format) ?>
               </div>

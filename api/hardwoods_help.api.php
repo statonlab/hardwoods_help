@@ -20,3 +20,27 @@ function hardwoods_help_get_fields($nid) {
     return $field;
   }, $fields);
 }
+
+/**
+ * Get the floating button items.
+ *
+ * @return array
+ */
+function hardwoods_help_get_help_menu_items() {
+  $items = [];
+
+  $nodes = db_query('SELECT DISTINCT (HH.nid), node.title 
+                      FROM {hardwoods_help} HH
+                      INNER JOIN {node} ON node.nid = HH.nid')->fetchAll();
+
+  foreach ($nodes as $node) {
+    $items[] = [
+      'node' => $node,
+      'topics' => db_query('SELECT id, title FROM {hardwoods_help} WHERE nid = :nid', [
+        'nid' => $node->nid,
+      ])->fetchAll(),
+    ];
+  }
+
+  return $items;
+}
