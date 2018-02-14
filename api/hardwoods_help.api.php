@@ -31,7 +31,8 @@ function hardwoods_help_get_help_menu_items() {
 
   $nodes = db_query('SELECT DISTINCT (HH.nid), node.title 
                       FROM {hardwoods_help} HH
-                      INNER JOIN {node} ON node.nid = HH.nid')->fetchAll();
+                      INNER JOIN {node} ON node.nid = HH.nid
+                      ORDER BY HH.nid ASC')->fetchAll();
 
   foreach ($nodes as $node) {
     $items[] = [

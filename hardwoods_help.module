@@ -68,6 +68,13 @@ function hardwoods_help_theme($existing, $type, $theme, $path) {
       'template' => 'node--help',
       'path' => "$path/theme/templates",
     ],
+    'help-page-index' => [
+      'arguments' => [
+        'items'
+      ],
+      'template' => 'help_page_index',
+      'path' => "$path/theme/templates",
+    ],
   ];
 }
 
@@ -80,4 +87,37 @@ function hardwoods_help_node_delete($node) {
   db_query("DELETE FROM {hardwoods_help} WHERE nid = :nid", [
     ':nid' => $node->nid,
   ]);
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function hardwoods_help_block_info() {
+  $block = [];
+
+  $block['help_index_block'] = [
+    'info' => t('Index of Help Pages and Topics'),
+    'cache' => DRUPAL_NO_CACHE
+  ];
+
+  return $block;
+}
+
+/**
+ * Implements hook_block_view().
+ *
+ * @throws \Exception;
+ *
+ * @return mixed|null
+ */
+function hardwoods_help_block_view($delta = '') {
+  if($delta !== 'help_index_block') {
+    return null;
+  }
+
+  return [
+    'content' => theme('help-page-index', [
+      'items' => hardwoods_help_get_help_menu_items()
+    ])
+  ];
 }
