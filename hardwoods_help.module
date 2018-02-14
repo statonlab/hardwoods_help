@@ -115,7 +115,9 @@ function hardwoods_help_block_view($delta = '') {
     return null;
   }
 
-  return theme('help-page-index', [
-    'items' => hardwoods_help_get_help_menu_items()
-  ]);
+  return [
+    'content' => theme('help-page-index', [
+      'items' => hardwoods_help_get_help_menu_items()
+    ])
+  ];
 }
